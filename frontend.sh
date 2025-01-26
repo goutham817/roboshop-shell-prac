@@ -22,4 +22,3 @@ echo $?
 
 systemctl enable nginx
 systemctl restart nginx
-echo $?
