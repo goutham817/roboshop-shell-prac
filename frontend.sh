@@ -2,7 +2,7 @@ dnf module disable nginx -y
 dnf module enable nginx:1.24 -y
 
 echo -e "\e[35m install nginx \e[0m"
-dnf install nginx -y
+dnf install nginx -y &>>/tmp/roboshop.log
 
 cp nginx.conf /etc/nginx/nginx.conf
 rm -rf /usr/share/nginx/html/*
