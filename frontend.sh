@@ -2,7 +2,6 @@ dnf module disable nginx -y &>>/tmp/roboshop.log
 echo $?
 dnf module enable nginx:1.24 -y &>>/tmp/roboshop.log
 echo $?
-
 echo -e "\e[35m install nginx \e[0m"
 dnf install nginx -y &>>/tmp/roboshop.log
   if [ $1 -eq 0 ]; then
@@ -10,9 +9,7 @@ dnf install nginx -y &>>/tmp/roboshop.log
    else
      echo -e "\e[32m failed \e[0m"
   fi
-
 cp nginx.conf /etc/nginx/nginx.conf &>>/tmp/roboshop.log
-
 rm -rf /usr/share/nginx/html/*
 
 echo -e "\e[35m downloaded content \e[0m"
