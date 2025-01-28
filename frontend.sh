@@ -4,7 +4,7 @@ dnf module enable nginx:1.24 -y &>>/tmp/roboshop.log
 echo $?
 echo -e "\e[35m install nginx \e[0m"
 dnf install nginx -y &>>/tmp/roboshop.log
-  if [ $1 -eq 0 ]; then
+  if [ $? -eq 0 ]; then
      echo -e "\e[32m sucess \e[0m"
    else
      echo -e "\e[32m failed \e[0m"
