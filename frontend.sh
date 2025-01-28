@@ -4,11 +4,11 @@ dnf module enable nginx:1.24 -y &>>/tmp/roboshop.log
 echo $?
 echo -e "\e[35m install nginx \e[0m"
 dnf install nginx -y &>>/tmp/roboshop.log
- if [ $1 -eq 0 ]; then
-    echo -e "\e[32m  SUCCESS \e[0m"
-  else
-    echo -e "\e[31m  FAILURE \e[0m"
-  fi
+ if [ $? -eq 0 ]; then
+  echo -e "\e[32m  SUCCESS \e[0m"
+else
+  echo -e "\e[31m  FAILURE \e[0m"
+fi
 
 cp nginx.conf /etc/nginx/nginx.conf &>>/tmp/roboshop.log
 rm -rf /usr/share/nginx/html/*
