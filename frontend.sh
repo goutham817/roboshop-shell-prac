@@ -1,27 +1,37 @@
-dnf module disable nginx -y &>>/tmp/roboshop.log
-echo $?
-dnf module enable nginx:1.24 -y &>>/tmp/roboshop.log
-echo $?
-echo -e "\e[35m install nginx \e[0m"
-dnf install nginx -y &>>/tmp/roboshop.log
- if [ $? -eq 0 ]; then
-  echo -e "\e[32m  SUCCESS \e[0m"
-else
-  echo -e "\e[31m  FAILURE \e[0m"
-fi
+source common.sh
+app_name=frontend
 
-cp nginx.conf /etc/nginx/nginx.conf &>>/tmp/roboshop.log
-rm -rf /usr/share/nginx/html/*
+print_heading "Disable Default Nginx"
+dnf module disable nginx -y &>>$log_file
+status_check $?
 
-echo -e "\e[35m downloaded content \e[0m"
-curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
-unzip /tmp/frontend.zip &>>/tmp/roboshop.log
-echo $?
+print_heading "Enabel Nginx 24 Version"
+dnf module enable nginx:1.24 -y &>>$log_file
+status_check $?
 
-echo -e "\e[35m restart nginx \e[0m"
-systemctl restart nginx &>>/tmp/roboshop.log
- echo $?
+print_heading "Install Nginx"
+dnf install nginx -y &>>$log_file
+status_check $?
 
-echo -e "\e[35m enable nginx \e[0m"
-systemctl enable nginx
- echo $?
+print_heading "Copy Nginx config file"
+cp nginx.conf /etc/nginx/nginx.conf &>>$log_file
+status_check $?
+
+print_heading "Clean up old application content"
+rm -rf /usr/share/nginx/html/* &>>$log_file
+status_check $?
+
+print_heading "Download Application content"
+curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip &>>$log_file
+status_check $?
+
+cd /usr/share/nginx/html
+
+print_heading "Extract Application Content"
+unzip /tmp/frontend.zip &>>$log_file
+status_check $?
+
+print_heading "Start Nginx"
+systemctl enable nginx &>>$log_file
+systemctl restart nginx &>>$log_file
+status_check $?

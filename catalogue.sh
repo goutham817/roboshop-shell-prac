@@ -1,23 +1,20 @@
-dnf module disable nodejs -y
-dnf module enable nodejs:20 -y
-dnf install nodejs -y
+source common.sh
+app_name=catalogue
 
-cp catalogue.service /etc/catalogue/catalogue.service
-cp mongodb.repo /etc/yum.repos.d/mongodb.repo
+nodejs_setup
 
-useradd roboshop
+print_heading "Copy MongoDB repo file"
+cp $scripts_path/mongodb.repo /etc/yum.repos.d/mongodb.repo &>>$log_file
+status_check $?
 
-rm -rf /app
-mkdir /app
-curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
-cd /app
-unzip /tmp/catalogue.zip
+print_heading "Install MongoDB Client"
+dnf install mongodb-mongosh -y &>>$log_file
+status_check $?
 
-npm install
+print_heading "Load Master Data"
+mongosh --host mongodb.devopsb78.online </app/db/master-data.js  &>>$log_file
+status_check $?
 
-dnf instal mongodb-mongosh -y
-mongosh --host MONGODB-SERVER-IPADDRESS </app/db/master-data.js
-systemctl daemon-reload
-
-systemctl enable nodejs
-systemctl restart nodejs
+print_heading "Restart Catalogue Service"
+systemctl restart catalogue &>>$log_file
+status_check $?

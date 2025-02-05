@@ -1,4 +1,6 @@
-dnf module disable nodejs -y
-dnf module enable nodejs:20 -y
-dnf install nodejs -y
+source common.sh
+app_name=cart
+
+nodejs_setup
+
 
